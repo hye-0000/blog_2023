@@ -62,64 +62,53 @@
         <li><a href="javascript:showPage(1)">1번글</a></li>
     </ul>
     <script>
-    // function stripIndent(str) {
-    //     const lines = str.split("\n");
-    //     let minIndent = Infinity;
-    //                    // 첫 번째 줄 이후의 각 줄에서 가장 작은 들여쓰기 값을 찾습니다.
-    //     for (let i = 1; i < lines.length; i++) {
-    //       const line = lines[i];
-    //       const indent = line.search(/\S/); // 첫 번째 비공백 문자의 인덱스를 찾습니다.
-    //              if (indent !== -1 && indent < minIndent) {
-    //         minIndent = indent;
-    //       }
-    //     }
-    //          // 모든 줄에서 가장 작은 들여쓰기 값을 뺍니다.
-    //     if (minIndent !== Infinity) {
-    //       for (let i = 0; i < lines.length; i++) {
-    //         lines[i] = lines[i].slice(minIndent);
-    //       }
-    //     }
-    //     // 결과 문자열을 반환합니다.
-    //     return lines.join("\n");
-    // }
     const Editor = toastui.Editor;
-    function katexPlugin() {
-        const toHTMLRenderers = {
-            katex(node) {
-                console.log("HI");
-                let html = katex.renderToString(node.literal, {
-                  throwOnError: false
-            });
-            return [
-                { type: "openTag", tagName: "div", outerNewLine: true },
-                { type: "html", content: html },
-                { type: "closeTag", tagName: "div", outerNewLine: true }
-            ];
-            }
-        };
-        return { toHTMLRenderers };
-    }
-    const viewerTemplateEl = document.querySelector("#viewerTemplate");
-    const viewerMarkdownSrc = "로딩중..."; 
-    const viewer = Editor.factory({
-        el: document.querySelector("#viewer"),
-        viewer: true,
-        initialValue: viewerMarkdownSrc,
-        plugins: [[toastui.Editor.plugin.codeSyntaxHighlight, { highlighter: Prism }], katexPlugin,
-        [toastui.Editor.plugin.uml,{ rendererURL: "http://www.plantuml.com/plantuml/svg/" }]]});
 
-    function showPage(pageNo){
-        fetch(pageNo + ".md")  //3.md
-        .then(response => response.text())
-        .then(text => {
-            viewer.setMarkwon(text);
-            
-            window.scrollTo({
-                top: 0,
-                behavior: "smooth"
-            });
-        })
+function katexPlugin() {
+  const toHTMLRenderers = {
+    katex(node) {
+      console.log("HI");
+      let html = katex.renderToString(node.literal, {
+        throwOnError: false
+      });
+      return [
+        { type: "openTag", tagName: "div", outerNewLine: true },
+        { type: "html", content: html },
+        { type: "closeTag", tagName: "div", outerNewLine: true }
+      ];
     }
+  };
+  return { toHTMLRenderers };
+}
+
+const viewerMarkdownSource = "로딩중...";
+
+const viewer = Editor.factory({
+  el: document.querySelector("#viewer-1"),  
+  viewer: true,
+  initialValue: viewerMarkdownSource,
+  plugins: [
+    [toastui.Editor.plugin.codeSyntaxHighlight, { highlighter: Prism }],
+    katexPlugin,
+    [
+      toastui.Editor.plugin.uml,
+      { rendererURL: "http://www.plantuml.com/plantuml/svg/" }
+    ]
+  ]
+});
+
+function showPage(pageNo) {
+  fetch(pageNo + ".md")
+    .then(response => response.text()) // 응답에서 본문만 취한다.
+    .then(text => {
+      viewer.setMarkdown(text);
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    })
+}
     </script>
 </body>
 </html>
