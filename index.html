@@ -109,14 +109,14 @@
 
     function showPage(pageNo){
         fetch(pageNo + ".md")  //3.md
-        .then(response => response.text())
-        .then(text => {
-            viewer.setMarkwon(text);
+            .then(response => response.text())
+            .then(text =>  {
+                viewer.setMarkdown(text);
             
-            window.scrollTo({
-                top: 0,
-                behavior: "smooth"
-            });
+                window.scrollTo({
+                    top: 0,
+                    behavior: "smooth"
+                });
         })
     }
     </script>
